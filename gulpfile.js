@@ -101,6 +101,7 @@ function serve(cb) {
       ghostMode: false,
       notify: false,
       ui: false,
+      https: true,
     },
     cb
   )
