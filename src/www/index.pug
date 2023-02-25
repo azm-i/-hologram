@@ -23,6 +23,10 @@ append scripts
   +scriptPage('/assets/js/index.js')
 
 append contents
-  | top page
+  <div id="orientation"></div>
+  <div style="display:block;max-width:300px;min-width:300px;width:300px;height;300px;max-height:300px;min-height:300px;border:1px solid #000000;margih:0;padding0;" id="ori">
+    <img src="/assets/img/marker_r.gif" style="width:10px;height:10px;position:absolute;margih:0;padding:0;" id="ori_t">
+    <canvas style="max-width:300px;min-width:300px;width:300px;height;300px;max-height:300px;min-height:300px;border:1px solid #000000;" id="can" wdith="300px" height="300px"></canvas>
+  </div>
 
 append fixedLocal
