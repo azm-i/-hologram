@@ -6,8 +6,10 @@ import Page from '~/parentClass/Page'
 
 class PageCurrent extends Page {
   onInit() {
-    var bt
-    window.addEventListener('load', function() {
+    let bt
+    this.card = this.el.querySelector('.card')
+    this.style = this.el.querySelector('.hover')
+    window.addEventListener('load', () => {
       if (
         typeof DeviceOrientationEvent !== 'undefined' &&
         typeof DeviceOrientationEvent.requestPermission === 'function'
@@ -18,41 +20,41 @@ class PageCurrent extends Page {
         bt.addEventListener('click', function() {
           ios13()
         })
-        document.getElementById('orientation').appendChild(bt)
+        document.querySelector('.setting').appendChild(bt)
       } else {
-        dev()
+        this.card.addEventListener('mousemove', e => {
+          this.card.classList.add('active')
+          let pos = [e.offsetX, e.offsetY]
+          e.preventDefault()
+          const cardWidth = this.card.clientWidth
+          const cardHeight = this.card.clientHeight
+          let currentX = pos[0]
+          let currentY = pos[1]
+          let px = Math.abs(Math.floor((100 / cardWidth) * currentX) - 100)
+          let py = Math.abs(Math.floor((100 / cardHeight) * currentY) - 100)
+          // let lp = 50 + (px - 50) / 1.5
+          // let tp = 50 + (py - 50) / 1.5
+          // let ty = ((tp - 50) / 2) * -1
+          // let tx = ((lp - 50) / 1.5) * 0.5
+          let grad_pos = `background-position: ${px}% ${py}%;`
+          // let tf = `transform: rotateX(${ty}deg) rotateY(${tx}deg)`
+          let style = `.card.active:before { ${grad_pos} }`
+          // this.card.setAttribute('style', tf)
+          this.style.innerHTML = style
+        })
+        this.card.addEventListener('mouseout', () => {
+          this.card.classList.remove('active')
+          this.style.innerHTML = ''
+          this.card.removeAttribute('style')
+        })
       }
     })
-    let can = document.getElementById('can')
-    let ct = can.getContext('2d')
-    ct.scale(1, 1)
-    ct.fillStyle = 'rgb(255,255,255)'
-    ct.fillRect(
-      0,
-      0,
-      can.getBoundingClientRect().width,
-      can.getBoundingClientRect().height
-    )
-    ct.strokeStyle = '#999999'
-    ct.lineWidth = 1
-    for (x = 13; x < 300; x += 30) {
-      ct.beginPath()
-      ct.moveTo(x, 0)
-      ct.lineTo(x, 299)
-      ct.stroke()
-    }
-    for (y = 13; y < 300; y += 30) {
-      ct.beginPath()
-      ct.moveTo(0, y)
-      ct.lineTo(299, y)
-      ct.stroke()
-    }
 
     function ios13() {
       DeviceOrientationEvent.requestPermission()
         .then(function(response) {
           if (response === 'granted') {
-            document.getElementById('orientation').removeChild(bt)
+            bt.innerHTML = 'ジャイロセンサーをONにしました'
             dev()
           }
         })
@@ -61,40 +63,41 @@ class PageCurrent extends Page {
         })
     }
 
-    function dev() {
-      window.addEventListener('deviceorientation', function(e) {
-        let a = e.absolute //方位データが地球の座標フレーム基準(true)か、デバイス任意のフレーム(false)か
+    let dev = () => {
+      window.addEventListener('deviceorientation', e => {
         let z = e.alpha //z軸 0～360
-        let x = e.beta //x軸 -180～180
-        let y = e.gamma //y軸 -90～90
-        if (z == null) {
-          z = 0
+        let x = e.beta //x軸
+        let y = e.gamma //y軸
+        if (x > 45) {
+          x = 45
         }
-        if (x == null) {
-          x = 0
+        if (x < -45) {
+          x = -45
         }
-        if (y == null) {
-          y = 0
+        if (y > 45) {
+          y = 45
         }
+        if (y < -45) {
+          y = -45
+        }
+        this.card.classList.add('active')
+        let px = Math.abs(Math.floor((x / 45) * 100))
+        let py = Math.abs(Math.floor((y / 45) * 100))
+        let grad_pos = `background-position: ${px}% ${py}%;`
+        let style = `.card.active:before { ${grad_pos} }`
+        this.style.innerHTML = style
+
         document.getElementById('orientation').innerHTML =
-          ' alpha(z軸):' +
+          'alpha(z軸):' +
           z.toFixed(3) +
           '<br>' +
-          '  beta(x軸):' +
+          px +
+          ' beta(x軸):' +
           x.toFixed(3) +
           '<br>' +
+          py +
           ' gamma(y軸):' +
           y.toFixed(3)
-        let ori = document.getElementById('ori')
-        // 要素の位置座標を取得
-        var clientRect = ori.getBoundingClientRect()
-        // ページの左端から、要素の左端までの距離
-        let px = window.pageXOffset + clientRect.left
-        // ページの上端から、要素の上端までの距離
-        let py = window.pageYOffset + clientRect.top
-        let t = document.getElementById('ori_t')
-        t.style.left = (y * 300) / 180 + 150 - 5 + px + 'px'
-        t.style.top = (x * 300) / 180 + 150 - 5 + py + 'px'
       })
     }
   }
