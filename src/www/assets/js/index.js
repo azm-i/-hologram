@@ -65,7 +65,7 @@ class PageCurrent extends Page {
 
     let dev = () => {
       window.addEventListener('deviceorientation', e => {
-        let z = e.alpha //z軸 0～360
+        // let z = e.alpha //z軸 0～360
         let x = e.beta //x軸
         let y = e.gamma //y軸
         if (x > 45) {
@@ -87,17 +87,17 @@ class PageCurrent extends Page {
         let style = `.card.active:before { ${grad_pos} }`
         this.style.innerHTML = style
 
-        document.getElementById('orientation').innerHTML =
-          'alpha(z軸):' +
-          z.toFixed(3) +
-          '<br>' +
-          px +
-          ' beta(x軸):' +
-          x.toFixed(3) +
-          '<br>' +
-          py +
-          ' gamma(y軸):' +
-          y.toFixed(3)
+        //   document.getElementById('orientation').innerHTML =
+        //     'alpha(z軸):' +
+        //     z.toFixed(3) +
+        //     '<br>' +
+        //     px +
+        //     ' beta(x軸):' +
+        //     x.toFixed(3) +
+        //     '<br>' +
+        //     py +
+        //     ' gamma(y軸):' +
+        //     y.toFixed(3)
       })
     }
   }
