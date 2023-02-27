@@ -6,7 +6,6 @@
 // styles
 //
 :root {
-  --image: url(/assets/img/image.jpg);
   --color1: #efb2fb;
   --color2: #acc6f8;
 }
@@ -30,7 +29,7 @@ html {
   height: 500px;
   overflow: hidden;
   margin: auto;
-  background-image: var(--image);
+  background-image: url('/assets/img/image.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
