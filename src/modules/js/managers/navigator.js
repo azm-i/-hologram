@@ -2,8 +2,8 @@ import {
   // isFirefox,
   // isTablet,
   isMobile,
-  // isAndroid,
-  // isIos,
+  isAndroid,
+  isIos,
   // isSafari,
   // isWindows,
 } from '~/utils/navigator'
@@ -24,14 +24,15 @@ import {
 //   document.documentElement.classList.add('bTablet')
 // }
 
-// /* OS */
+/* OS */
 if (isMobile) {
   document.documentElement.classList.add('bMobile')
 }
-// if (isIos) {
-//   document.documentElement.classList.add('bIos')
-// } else if (isAndroid) {
-//   document.documentElement.classList.add('bAndroid')
+if (isIos) {
+  document.documentElement.classList.add('bIos')
+} else if (isAndroid) {
+  document.documentElement.classList.add('bAndroid')
+}
 // } else if (isWindows) {
 //   document.documentElement.classList.add('bWindows')
 // }

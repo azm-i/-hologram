@@ -1,4 +1,5 @@
 import Page from '~/parentClass/Page'
+import { isIos, isAndroid, isMobile } from '~/utils/navigator'
 
 //
 // main
@@ -11,14 +12,16 @@ class PageCurrent extends Page {
     this.style = this.el.querySelector('.hover')
     window.addEventListener('load', () => {
       if (
-        typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function'
+        (typeof DeviceOrientationEvent !== 'undefined' &&
+          typeof DeviceOrientationEvent.requestPermission === 'function') ||
+        isMobile
       ) {
         bt = document.createElement('a')
         bt.classList.add('bta2')
         bt.innerHTML = 'ジャイロセンサーをON'
         bt.addEventListener('click', function() {
-          ios13()
+          if (isIos) ios13()
+          else if (isAndroid) android()
         })
         document.querySelector('.setting').appendChild(bt)
       } else {
@@ -55,15 +58,18 @@ class PageCurrent extends Page {
         .then(function(response) {
           if (response === 'granted') {
             bt.innerHTML = 'ジャイロセンサーをONにしました'
-            dev()
+            devIos()
           }
         })
         .catch(function(e) {
           console.log(e)
         })
     }
+    function android() {
+      devAndroid()
+    }
 
-    let dev = () => {
+    let devIos = () => {
       window.addEventListener('deviceorientation', e => {
         // let z = e.alpha //z軸 0～360
         let x = e.beta //x軸
@@ -98,6 +104,30 @@ class PageCurrent extends Page {
         //     py +
         //     ' gamma(y軸):' +
         //     y.toFixed(3)
+      })
+    }
+    let devAndroid = () => {
+      window.addEventListener('deviceorientationabsolute', e => {
+        let x = e.beta //x軸
+        let y = e.gamma //y軸
+        if (x > 45) {
+          x = 45
+        }
+        if (x < -45) {
+          x = -45
+        }
+        if (y > 45) {
+          y = 45
+        }
+        if (y < -45) {
+          y = -45
+        }
+        this.card.classList.add('active')
+        let px = Math.abs(Math.floor((x / 45) * 100))
+        let py = Math.abs(Math.floor((y / 45) * 100))
+        let grad_pos = `background-position: ${px}% ${py}%;`
+        let style = `.card.active:before { ${grad_pos} }`
+        this.style.innerHTML = style
       })
     }
   }
